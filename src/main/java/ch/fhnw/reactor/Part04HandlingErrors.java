@@ -21,7 +21,7 @@ public class Part04HandlingErrors {
      * Use the log operator to view that the flux is terminated with an error.
      */
     public Flux<Integer> errorIsTerminal(Flux<String> numbers) {
-        return null;
+        return numbers.map(s -> Integer.parseInt(s)).log();
     }
 
     /**
@@ -32,7 +32,9 @@ public class Part04HandlingErrors {
      * Use the log operator to view that the flux is terminated successfully.
      */
     public Flux<Integer> handleErrorWithFallback(Flux<String> numbers) {
-        return null;
+        return numbers.map(s -> Integer.parseInt(s))
+                .onErrorReturn(NumberFormatException.class, 0)
+                .log();
     }
 
 
@@ -45,7 +47,8 @@ public class Part04HandlingErrors {
      * Use the flatMap and check where you put the onErrorReturn operator
      */
     public Flux<Integer> handleErrorAndContinue(Flux<String> numbers) {
-        return null;
+        return numbers.flatMap(s -> Mono.just(s).map(Integer::parseInt)
+                .onErrorReturn(NumberFormatException.class, 0).log());
     }
 
     /**
@@ -55,7 +58,8 @@ public class Part04HandlingErrors {
      * {@link NumberFormatException} is occurred and continue with other items.
      */
     public Flux<Integer> handleErrorWithEmptyMonoAndContinue(Flux<String> numbers) {
-        return null;
+        return numbers.flatMap(s -> Mono.just(s).map(Integer::parseInt)
+                .onErrorResume(throwable -> Mono.empty())).log();
 
     }
 
@@ -68,7 +72,11 @@ public class Part04HandlingErrors {
      * If still no response then provide "default" as a return value
      */
     public Flux<String> timeOutWithRetry(Flux<String> colors) {
-        return null;
+        return colors.concatMap(color ->
+                simulateRemoteCall(color)
+                        .timeout(Duration.ofMillis(400))
+                        .doOnError(s -> log.info(s.getMessage()))
+                        .retry(2).onErrorReturn("default")).log();  
     }
 
     public Mono<String> simulateRemoteCall(String input) {

@@ -1,5 +1,6 @@
 package ch.fhnw.reactor;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -10,6 +11,7 @@ import java.util.stream.Stream;
 import org.reactivestreams.Publisher;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Learn about creating Mono or Flux publishers.
@@ -26,7 +28,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence that emits a single value from the provided Optional<String> parameter.
      */
     Publisher<String> createFromOptional(Optional<String> foo) {
-        return null;
+        return Mono.justOrEmpty(foo);
     }
 
     /**
@@ -35,7 +37,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence that emits a single value from the provided potentially null value.
      */
     Publisher<String> createFromPotentiallyNull(String foo) {
-        return null;
+        return Mono.justOrEmpty(foo);
     }
 
     /**
@@ -44,7 +46,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence that emits a single value from the provided lazily captured value.
      */
     Publisher<String> createFromSupplier(Supplier<String> foo) {
-        return null;
+        return Mono.fromSupplier(foo);
     }
 
     /**
@@ -53,7 +55,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence producing its value using the provided CompletableFuture parameter.
      */
     Publisher<String> createFromFuture(CompletableFuture<String> future) {
-        return null;
+        return Mono.fromFuture(future);
     }
 
     /**
@@ -62,7 +64,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence producing its value using the provided Callable.
      */
     Publisher<String> createFromCallable(Callable<String> callable) {
-        return null;
+        return Mono.fromCallable(callable);
     }
 
     /**
@@ -71,7 +73,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence that emits "foo" and "bar" strings.
      */
     Publisher<String> createFooBar() {
-        return null;
+        return Flux.just("foo", "bar");
     }
 
     /**
@@ -80,7 +82,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence from the provided array.
      */
     Publisher<String> createFromArray(String[] array) {
-        return null;
+        return Flux.fromArray(array);
     }
 
     /**
@@ -89,7 +91,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence from the provided list.
      */
     Publisher<String> createFromList(List<String> values) {
-        return null;
+        return Flux.fromIterable(values);
     }
 
     /**
@@ -98,7 +100,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence that emits the items contained in the provided stream.
      */
     Publisher<String> createFromStream(Stream<String> stream) {
-        return null;
+        return Flux.fromStream(stream);
     }
 
     /**
@@ -107,7 +109,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence that completes without emitting any item.
      */
     Publisher<Void> createEmpty() {
-        return null;
+        return Mono.empty(); // or Flux.empty()
     }
 
     /**
@@ -116,7 +118,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence that terminates with {@link IllegalStateException} error immediately after being subscribed to.
      */
     Publisher<Void> createError() {
-        return null;
+        return Mono.error(new IllegalStateException()); // or Flux.error(new IllegalStateException())
     }
 
     /**
@@ -125,7 +127,7 @@ public class Part01CreateFluxOrMono {
      * Create a sequence that will never signal any data, error or completion signal.
      */
     Publisher<Void> neverEmit() {
-        return null;
+        return Mono.never(); // or Flux.never();
     }
 
     /**
@@ -135,7 +137,7 @@ public class Part01CreateFluxOrMono {
      * Hint: Flux.defer
      */
     Flux<Integer> lazy(Supplier<Publisher<Integer>> supplier) {
-        return null;
+        return Flux.defer(supplier);
     }
 
     /**
@@ -145,7 +147,7 @@ public class Part01CreateFluxOrMono {
      * Hint: Flux.interval
      */
     Publisher<Long> counter() {
-        return null;
+        return Flux.interval(Duration.ofMillis(100)).take(5);
     }
 
     /**
@@ -155,7 +157,7 @@ public class Part01CreateFluxOrMono {
      * Hint: Flux.range
      */
     Publisher<Integer> fromRange() {
-        return null;
+        return Flux.range(5, 6);
     }
 
 }

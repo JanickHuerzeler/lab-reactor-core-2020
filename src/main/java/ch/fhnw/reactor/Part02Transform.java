@@ -15,17 +15,19 @@ public class Part02Transform {
      * Create a sequence which transforms the values in the given flux to their length.
      */
     Flux<Integer> transformToLength(Flux<String> flux) {
-        return null;
+        return flux.map(s -> s.length());
     }
 
     /**
      * TODO 02.02
      * <p>
      * Create a sequence which transforms the provided string sequence into a stream of uppercase characters.
-     * Hint: Use method s.split("") to convert a string into a string array containing its characters.  
+     * Hint: Use method s.split("") to convert a string into a string array containing its characters.
      */
     Flux<String> characters(Flux<String> flux) {
-        return null;
+        return flux
+                .map(s -> s.toUpperCase())
+                .flatMap(s -> Flux.fromArray(s.split("")).log());
     }
 
     /**
@@ -34,7 +36,7 @@ public class Part02Transform {
      * Merge the values emitted by flux1 and flux2 publishers into an interleaved merged sequence.
      */
     Flux<String> combineInEmissionOrder(Flux<String> flux1, Flux<String> flux2) {
-        return null;
+        return Flux.merge(flux1, flux2);
     }
 
     /**
@@ -43,7 +45,7 @@ public class Part02Transform {
      * Pair the values emitted by the flux1 publisher with the flux2 publisher.
      */
     public Flux<Tuple2<String, Integer>> pairValues(Flux<String> flux1, Flux<Integer> flux2) {
-        return null;
+        return Flux.zip(flux1, flux2);
     }
 
     /**
@@ -52,7 +54,7 @@ public class Part02Transform {
      * When the phoneNumber and deliveryAddress is available pair them into an Order Mono.
      */
     public Mono<Order> combineValues(Mono<String> phoneNumber, Mono<String> deliveryAddress) {
-        return null;
+        return Mono.zip(phoneNumber, deliveryAddress, (p, d) -> new Order(p, d));
     }
 
     @Data

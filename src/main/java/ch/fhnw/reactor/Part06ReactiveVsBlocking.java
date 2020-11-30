@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 public class Part06ReactiveVsBlocking {
 
@@ -19,7 +20,7 @@ public class Part06ReactiveVsBlocking {
      * Return the Customer emitted by the provided Mono
      */
     public Customer monoToCustomer(Mono<Customer> customer) {
-        return null;
+        return customer.block();
     }
 
     /**
@@ -28,7 +29,7 @@ public class Part06ReactiveVsBlocking {
      * Return the Customers emitted by the provided Flux
      */
     public Iterable<Customer> fluxToCustomers(Flux<Customer> customers) {
-        return null;
+        return customers.toIterable();
     }
 
     /**
@@ -40,7 +41,8 @@ public class Part06ReactiveVsBlocking {
      * Configure that each subscription will happen on a worker from Schedulers.elastic
      */
     public Flux<Customer> blockingRepositoryToFlux(BlockingCustomerRepository repository) {
-        return null;
+        return Flux.defer(() -> Flux.fromIterable(repository.findAll()))
+                .subscribeOn(Schedulers.elastic());
     }
 
     /**
@@ -50,7 +52,9 @@ public class Part06ReactiveVsBlocking {
      * Mono<Void>
      */
     public Mono<Void> fluxToBlockingRepository(Flux<Customer> customers, BlockingCustomerRepository repository) {
-        return null;
+        return customers
+                .publishOn(Schedulers.elastic())
+                .doOnNext(repository::save).then(); 
 
     }
 
