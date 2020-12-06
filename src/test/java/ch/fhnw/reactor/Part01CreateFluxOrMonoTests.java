@@ -59,7 +59,7 @@ public class Part01CreateFluxOrMonoTests {
 
     @Test
     public void createFromArray() {
-        Publisher<String> publisher = workshop.createFromArray(new String[]{"foo", "bar"});
+        Publisher<String> publisher = workshop.createFromArray(new String[] { "foo", "bar" });
         StepVerifier.create(publisher).expectNext("foo", "bar").verifyComplete();
     }
 
@@ -90,11 +90,7 @@ public class Part01CreateFluxOrMonoTests {
     public void neverEmit() {
         Publisher<Void> publisher = workshop.neverEmit();
 
-        StepVerifier.create(publisher)
-                .expectSubscription()
-                .expectNoEvent(Duration.ofSeconds(1))
-                .thenCancel()
-                .verify();
+        StepVerifier.create(publisher).expectSubscription().expectNoEvent(Duration.ofSeconds(1)).thenCancel().verify();
     }
 
     @Test
@@ -110,22 +106,17 @@ public class Part01CreateFluxOrMonoTests {
     }
 
     @Test
-    public void fromRange() {
-        Publisher<Integer> publisher = workshop.fromRange();
-
-        StepVerifier.create(publisher)
-                .expectNext(5, 6, 7, 8, 9, 10)
-                .verifyComplete();
-    }
-
-    @Test
     public void counter() {
         Publisher<Long> publisher = workshop.counter();
 
-        StepVerifier.create(publisher)
-                .expectNext(0L, 1L, 2L, 3L, 4L)
-                .verifyComplete();
+        StepVerifier.create(publisher).expectNext(0L, 1L, 2L, 3L, 4L).verifyComplete();
     }
 
+    @Test
+    public void fromRange() {
+        Publisher<Integer> publisher = workshop.fromRange();
+
+        StepVerifier.create(publisher).expectNext(5, 6, 7, 8, 9, 10).verifyComplete();
+    }
 
 }
