@@ -10,44 +10,46 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 public class Part06ReactiveVsBlocking {
 
     /**
-     * TODO 06.01
+     * 06.01
      * <p>
      * Return the Customer emitted by the provided Mono
      */
     public Customer monoToCustomer(Mono<Customer> customer) {
-        return null;
+        return customer.block();
     }
 
     /**
-     * TODO 06.02
+     * 06.02
      * <p>
      * Return the Customers emitted by the provided Flux
      */
     public Iterable<Customer> fluxToCustomers(Flux<Customer> customers) {
-        return null;
+        return customers.toIterable();
     }
 
     /**
      * TODO 06.03
      * <p>
-     * Create a Flux reading all customers from the blocking {@link BlockingCustomerRepository}
-     * deferred until the flux is subscribed.
+     * Create a Flux reading all customers from the blocking
+     * {@link BlockingCustomerRepository} deferred until the flux is subscribed.
      * <p>
-     * Configure that each subscription will happen on a worker from Schedulers.elastic
+     * Configure that each subscription will happen on a worker from
+     * Schedulers.elastic
      */
     public Flux<Customer> blockingRepositoryToFlux(BlockingCustomerRepository repository) {
-        return null;
+        return Flux.defer(() -> Flux.fromIterable(repository.findAll())).subscribeOn(Schedulers.elastic());
     }
 
     /**
      * TODO 06.04
      * <p>
-     * Save the users from the customers Flux into the blocking repository using an elastic scheduler and return a
-     * Mono<Void>
+     * Save the users from the customers Flux into the blocking repository using an
+     * elastic scheduler and return a Mono<Void>
      */
     public Mono<Void> fluxToBlockingRepository(Flux<Customer> customers, BlockingCustomerRepository repository) {
         return null;
