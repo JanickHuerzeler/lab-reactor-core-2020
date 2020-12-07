@@ -63,7 +63,8 @@ public class Part04HandlingErrors {
      * with other items.
      */
     public Flux<Integer> handleErrorWithEmptyMonoAndContinue(Flux<String> numbers) {
-        return numbers.map(Integer::parseInt).onErrorContinue(e -> e instanceof NumberFormatException, (t, o) -> {});
+        return numbers.map(Integer::parseInt).onErrorContinue(e -> e instanceof NumberFormatException, (t, o) -> {
+        });
     }
 
     /**
@@ -75,7 +76,8 @@ public class Part04HandlingErrors {
      * still no response then provide "default" as a return value
      */
     public Flux<String> timeOutWithRetry(Flux<String> colors) {
-        //return colors.map(col -> simulateRemoteCall(col).time).timeout(Duration.ofMillis(400));
+        return colors.concatMap(color -> simulateRemoteCall(color).timeout(Duration.ofMillis(400))
+                .doOnError(s -> log.info(s.getMessage())).retry(2).onErrorReturn("default")).log();
     }
 
     public Mono<String> simulateRemoteCall(String input) {
