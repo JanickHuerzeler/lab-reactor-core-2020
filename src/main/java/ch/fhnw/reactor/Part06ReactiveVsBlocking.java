@@ -33,7 +33,7 @@ public class Part06ReactiveVsBlocking {
     }
 
     /**
-     * TODO 06.03
+     * 06.03
      * <p>
      * Create a Flux reading all customers from the blocking
      * {@link BlockingCustomerRepository} deferred until the flux is subscribed.
@@ -46,14 +46,13 @@ public class Part06ReactiveVsBlocking {
     }
 
     /**
-     * TODO 06.04
+     * 06.04
      * <p>
      * Save the users from the customers Flux into the blocking repository using an
      * elastic scheduler and return a Mono<Void>
      */
     public Mono<Void> fluxToBlockingRepository(Flux<Customer> customers, BlockingCustomerRepository repository) {
-        return null;
-
+        return customers.publishOn(Schedulers.elastic()).doOnNext(repository::save).then();
     }
 
     static class BlockingCustomerRepository {
